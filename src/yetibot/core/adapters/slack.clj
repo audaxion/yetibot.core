@@ -72,24 +72,30 @@
         user-model (users/get-user cs (:user e))]
     (handle-raw cs user-model :leave nil)))
 
+(defn handle-message [event]
+  ; don't listen to yetibot's own messages
+  (when (not= (:id (self)) (:user event))
+    (let [channel (:channel event)
+          cs (chat-source channel)
+          user-model (users/get-user cs (:user event))]
+      (binding [*target* channel
+                yetibot.core.chat/*messaging-fns* messaging-fns]
+        (handle-raw cs
+                    user-model
+                    :message
+                    (:text event))))))
+
 (defn on-message [event]
   (log/info "message" event)
-  (let [subtype (:subtype event)]
+  (if-let [subtype (:subtype event)]
     ; handle the subtype
     (condp = subtype
       "channel_join" (on-channel-join event)
       "channel_leave" (on-channel-leave event)
-      ; don't listen to yetibot's own messages
-      (when (not= (:id (self)) (:user event))
-        (let [channel (:channel event)
-              cs (chat-source channel)
-              user-model (users/get-user cs (:user event))]
-          (binding [*target* channel
-                    yetibot.core.chat/*messaging-fns* messaging-fns]
-            (handle-raw cs
-                        user-model
-                        :message
-                        (:text event))))))))
+      "me_message" (handle-message event)
+      ; do nothing if we don't understand
+      nil)
+    (handle-message event)))
 
 (defn on-hello [event]
   (log/info "hello" event))
