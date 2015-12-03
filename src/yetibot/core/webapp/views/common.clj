@@ -16,7 +16,7 @@
      (include-css "/css/screen.css")]
     [:body
      [:div.content.animate
-      (link-to "http://github.com/devth/yetibot"
+      (link-to "http://github.com/audaxion/yetibot"
                (image {:class "yeti"} "/img/yeti.png")
                [:h1 "yetibot"]
                [:p version] )]]))
