@@ -1,20 +1,27 @@
 (ns yetibot.core.models.google-search
   (:require
+    [yetibot.core.config :refer [get-config conf-valid?]]
     [yetibot.core.util.http :refer [get-json map-to-query-string]]))
 
-(def endpoint "http://ajax.googleapis.com/ajax/services/search/images")
-(def configured? true)
+(def config (get-config :yetibot :models :google-search))
+(def endpoint "https://www.googleapis.com/customsearch/v1")
+(def configured? (conf-valid? config))
 
-(def ^:private format-result (juxt :url :contentNoFormatting))
+(defn- format-result [result]
+  [(-> (get-in result [:pagemap :cse_image])
+       rand-nth
+       :src)
+   (:title result)
+   (:link result)])
 
 (defn- fetch-image [q n]
   (let [uri (str endpoint "?" (map-to-query-string
-                                {:v "1.0" :rsz n
-                                 :q q :safe "active"}))]
+                                {:key (:key config) :cx (:cx config)
+                                 :num n :q q :safe "high"}))]
     (get-json uri)))
 
 (defn image-search
   ([q] (image-search q 8))
   ([q n]
    (map format-result
-        (-> (fetch-image q n) :responseData :results))))
+        (-> (fetch-image q n) :items))))
