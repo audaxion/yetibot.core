@@ -11,8 +11,8 @@
   [(-> (get-in result [:pagemap :cse_image])
        rand-nth
        :src)
-   (:title result)
-   (:link result)])
+   #_(:title result)
+   #_(:link result)])
 
 (defn- fetch-image [q n]
   (let [uri (str endpoint "?" (map-to-query-string
