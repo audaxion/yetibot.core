@@ -56,9 +56,9 @@
    :where [[?e :history/body ?body ?tx]
            [?tx :db/txInstant ?ts]]})
 
-(defn head [n query] (take n (q query)))
+(defn head [n query] (take n (sort (q query))))
 
-(defn tail [n query] (take-last n (q query)))
+(defn tail [n query] (take-last n (sort (q query))))
 
 (defn count-entities [] '{:find [(count ?e)]
                        :where [[?e :history/body ?body]]})
@@ -72,6 +72,8 @@
   ([adapter room query]
    (update-in query [:where] into [['?e :history/chat-source-room room]
                                    ['?e :history/chat-source-adapter adapter]])))
+
+
 
 ;; entities
 
@@ -106,6 +108,19 @@
   (->> (tail last-n (grep re))
        reverse
        touch-all))
+
+;; new efficient alternative to `non-cmd-items` and `cmd-only-items`
+
+(defn last-chat-for-room
+  "Takes chat source and returns the last chat for the room.
+   `cmd?` is a boolean specifying whether it should be the last yetibot command
+   or a normal chat.
+   Useful for `that` commands."
+  ([chat-source cmd?] (last-chat-for-room chat-source cmd? 1))
+  ([{:keys [adapter room]} cmd? history-count]
+   (->> (filter-chat-source
+          adapter room (grep (if cmd? cmd-history non-cmd-history)))
+        (tail history-count))))
 
 (defn non-cmd-items
   "Return `chat-item` only if it doesn't match any regexes in `history-ignore`"

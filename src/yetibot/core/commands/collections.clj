@@ -168,6 +168,24 @@
 (cmd-hook ["unwords" #"^unwords$"]
           _ unwords)
 
+; letters
+(defn letters
+  "letters <string> # turn <string> into a sequence of individual letters"
+  [{args :args}]
+  (seq args))
+
+(cmd-hook ["letters" #"^letters$"]
+          _ letters)
+
+; unletters
+(defn unletters
+  "unletters <list> # join <list> without a delimiter"
+  [{opts :opts}]
+  (s/join "" (ensure-items-collection opts)))
+
+(cmd-hook ["unletters" #"^unletters$"]
+          _ unletters)
+
 ; set
 (defn set-cmd
   "set <list> # returns the set of distinct elements in <list>"
@@ -205,6 +223,15 @@
 
 (cmd-hook #"sort"
           _ sort-cmd)
+
+; sortnum
+(defn sortnum-cmd
+  "sortnum <list> # numerically sort a list"
+  [{items :opts}]
+  (sort #(- (read-string %1) (read-string %2)) (ensure-items-collection items)))
+
+(cmd-hook #"sortnum"
+          _ sortnum-cmd)
 
 ; grep
 (defn slide-context [coll i n]

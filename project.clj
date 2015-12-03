@@ -1,4 +1,4 @@
-(defproject yetibot.core "0.2.34-SNAPSHOT"
+(defproject yetibot.core "0.2.61-SNAPSHOT"
   :description "Core yetibot utilities, extracted for shared use among yetibot
                 and its various plugins"
   :url "https://github.com/devth/yetibot.core"
@@ -9,6 +9,7 @@
   :signing {:gpg-key "C9764E34"}
   :deploy-repositories [["releases" :clojars]]
   :repl-options {:init-ns yetibot.core.repl
+                 :timeout 120000
                  :welcome (println "Welcome to the yetibot development repl!")}
   :aot [yetibot.core.init]
   :main yetibot.core.init
@@ -16,12 +17,13 @@
                  [org.clojure/core.async "0.1.338.0-5c5012-alpha"]
                  [org.clojure/data.json "0.2.6"]
                  [org.clojure/tools.namespace "0.2.2"]
+                 [org.clojure/tools.nrepl "0.2.11"]
                  [org.clojure/tools.trace "0.7.6"]
                  [org.clojure/java.classpath "0.2.0"]
                  [org.clojure/core.cache "0.6.3"]
 
                  [org.clojure/core.memoize "0.5.6"]
-                 [org.clojure/core.match "0.2.0-rc5"]
+                 [org.clojure/core.match "0.3.0-alpha4"]
                  [org.clojure/data.xml "0.0.6"]
                  [org.clojure/data.zip "0.1.1"]
                  [org.clojure/java.jdbc "0.2.3"]
@@ -46,11 +48,6 @@
                  [http.async.client "0.5.2" :exclusions [[org.slf4j/slf4j-api]
                                                          [io.netty/netty]]]
 
-                 ; web
-                 [compojure "1.1.5"]
-                 [hiccup "1.0.2"]
-                 [lib-noir "0.3.4" :exclusions [[org.clojure/tools.namespace]]]
-
                  ; email
                  [com.draines/postal "1.9.0"]
                  [clojure-mail "0.1.4"]
@@ -58,11 +55,12 @@
                  ; chat protocols
                  [clj-campfire "2.2.0"]
                  [irclj "0.5.0-alpha4"]
-                 [org.julienxx/clj-slack "0.4.3"]
+                 ; [org.julienxx/clj-slack "0.4.3"]
+                 [org.julienxx/clj-slack "0.5.1"]
                  [devth/slack-rtm "0.1.0"]
 
                  ; database
-                 [com.datomic/datomic-free  "0.9.5078"]
+                 [com.datomic/datomic-free  "0.9.5302"]
                  [datomico "0.2.0"]
 
                  ; javascript evaluation
@@ -89,4 +87,29 @@
                  [overtone/at-at "1.0.0"]
                  [inflections "0.7.3"]
                  [environ "1.0.0"]
+
+                 ; web/ring
+                 [ring/ring-json "0.3.1"]
+                 [ring/ring-core "1.4.0"]
+
+                 ; [ring/ring-jetty-adapter "1.4.0"]
+                 [http-kit "2.1.18"]
+
+                 ; [ring-server "0.4.0"]
+                 ; [info.sunng/ring-jetty9-adapter "0.8.4"]
+
+
+                 [ring/ring-defaults "0.1.5"]
+                 [ring/ring-session-timeout "0.1.0"]
+
+                 [metosin/ring-middleware-format "0.6.0"]
+                 [metosin/ring-http-response "0.6.5"]
+
+                 ; web
+                 [selmer "0.8.2"]
+                 [compojure "1.4.0"]
+                 [prone "0.8.2"]
+                 [hiccup "1.0.5"]
+                 ; [markdown-clj "0.9.66"]
+
                  ])
