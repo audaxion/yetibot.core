@@ -141,7 +141,7 @@
         (handle-raw cs
                     user-model
                     :message
-                    (:text event))))))
+                    (unencode-message (:text event)))))))
 
 (defn on-message [event]
   (log/info "message" event)
