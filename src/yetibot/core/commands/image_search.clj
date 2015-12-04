@@ -18,7 +18,13 @@
 (defn- fetch-image
   "Search configured namespaces starting with the first and falling back to next when
    there are no results"
-  ([q] (fetch-image q engine-nss))
+  ([q]
+    (-> (pmap (fn [n]
+                (let [search-fn (ns-resolve n 'image-search)]
+                  (info "searching for " q "in" n)
+                  (search-fn q)))
+              engine-nss)
+        flatten))
   ([q [n & nssrest]]
    (info "searching for " q "in" n)
    (let [search-fn (ns-resolve n 'image-search)

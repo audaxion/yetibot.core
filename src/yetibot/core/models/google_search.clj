@@ -21,7 +21,7 @@
     (get-json uri)))
 
 (defn image-search
-  ([q] (image-search q 8))
+  ([q] (image-search q 50))
   ([q n]
    (map format-result
         (-> (fetch-image q n) :items))))
